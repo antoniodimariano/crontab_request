@@ -1,0 +1,8 @@
+#!/bin/bash
+echo "The last tag was:"
+git describe --abbrev=0 --tags
+echo "Type the tag you want to add to the repo and the container, followed by [ENTER]:"
+read newtag
+git tag -f $newtag
+git push origin --tags
+./build -i tc-new-labs-deployment-trigger -v $newtag

@@ -1,0 +1,6 @@
+requests
+celery==4.4.0
+redis==3.3.11
+microservices_messaging_layer==1.0.22
+configuration-layer==1.0.17
+aiohttp
