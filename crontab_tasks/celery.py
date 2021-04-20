@@ -14,6 +14,6 @@ app.conf.beat_schedule = {
 
     "periodically_request_available_labs_report": {
         "task":'crontab_tasks.tasks.periodically_request_available_labs_report',
-        "schedule": crontab(minute=os.environ.get('ping_token_minute',"*/2"))
+        "schedule": crontab(minute=int(os.environ.get('request_frequency',"*/2")))
     }
 }

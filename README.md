@@ -3,25 +3,9 @@
 
 # Description 
 
-This service is responsible for periodically checking the number of available labs and see if new labs are needed.
-If new labs are needed, a REST request is sent to the `tc-vapps-supply-guard` and `tc-users-supply-guard`
-
-The service uses a Celery crontab to request and send the report to the above services. 
-
-The report received from the `tc-available-labs` service has the following data format 
-
-```json
-{"sps": {"edc2": 4}, "wfbss": {"edc2": 1}, "wfbs-std": {"edc2": 4}}
-
-```
-The payload of the request sent to the the `tc-vapps-supply-guard` service and `tc-users-supply-guard` has the following data format 
-
-
-```json
-
-{"dc_name": "edc2", "template_shortname": "sps"}
-
-```
+This services runs a crontab task that periodically sends a GET request to the service http://tc-new-labs-deployment-trigger-rest-server:3000/api/lab/provisioning/check_availability.
+The end goal is to trigger the actions of checking if new resources are needed.
+The default frequency of the outbound request is 2 mins but it can be changed by setting the ENV variable `request_frequency`. 
 
 
 # Requirements
@@ -78,4 +62,4 @@ same as staging
 | celery_broker_url   | string    | Required. The FQDN or the Redis server to be used as broker |
 | brokers    | string   | Required. The FQDN of the Confluent Kafka Brokers.|
 | schema_registry               | string   | Required. The FQDN of the Confluent Kafka Service Registry.|
-| service_name                    |tc-new-labs-deployment-trigger  | Required. The service name.|
+| service_name                     |tc-new-labs-deployment-trigger  | Required. The service name.|
