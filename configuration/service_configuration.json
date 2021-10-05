@@ -1,32 +1,18 @@
 {
-  "service_name": "tc-new-labs-deployment-trigger",
-  "start_environment": "staging",
-  "datacentre": {},
-  "external_rest_services": {
-    "available_labs_repository": "http://localhost:4900/api/lab/report",
-    "vapps_supply_guard": "http://localhost:5810/api/lab/provisioning/check_vapps_refill",
-    "users_supply_guard": "http://localhost:5710/api/lab/provisioning/check_users_refill"
-  },
-  "persistence_conf": {
-    "AVAILABLE_LABS_THRESHOLD": {
-      "sps": {
-        "edc2": 4,
-        "sjdc": 0
-      },
-      "wfbs-std": {
-        "edc2": 4,
-        "sjdc": 0
-      },
-      "apex": {
-        "edc2": 0,
-        "sjdc": 0
-      },
-      "wfbss": {
-        "edc2": 0,
-        "sjdc": 0
-      }
-
-    }
-  },
-  "credentials": {}
+  "list_of_websites_to_check": [
+    [
+      "http://cloudbase.me",
+      [
+        "Microservices",
+        "Antonio"
+      ]
+    ],
+    [
+      "http://ferrari.com",
+      [
+        "ferrari",
+        "italia"
+      ]
+    ]
+  ]
 }

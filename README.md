@@ -1,65 +1,43 @@
+# Periodically Request for Websites metrics
 
-# New Labs Deployment Trigger
+#### Author Antonio Di Mariano - antonio.dimariano@gmail.com
 
-# Description 
+## Description
 
-This services runs a crontab task that periodically sends a GET request to the service http://tc-new-labs-deployment-trigger-rest-server:3000/api/lab/provisioning/check_availability.
-The end goal is to trigger the actions of checking if new resources are needed.
-The default frequency of the outbound request is 2 mins but it can be changed by setting the ENV variable `request_frequency`. 
-
+This services runs a crontab task that periodically sends a POST request to the remote service specified in the ENV
+variable
+`websites_checker_service_url`
+The end goal is to trigger the actions of fetching and collecting metrics for the websites specified in
+the `configuration/service_configuration.json`
+The default frequency of the outbound request is 2 minutes, but it can be changed by setting the ENV
+variable `request_frequency`.
 
 # Requirements
 
-* Python >=3.6
+* Python >=3.8
+* Redis 
 
 # Dependencies
 
-* requests
+* requests==2.26.0
 * celery==4.4.0
 * redis==3.3.11
-* microservices_messaging_layer==1.0.22
-* configuration-layer==1.0.17
-* aiohttp==3.6.2
 
 # Run
 
-* First start Celery 
+* Start Celery Beat
 
-`worker --purge -A celery_taks -A crontab_tasks -l info -Q available-resources-announcer -c 1 -O fair -n available-resources-announcer`
+`beat -A crontab_tasks -l info`
 
-* Secondly start the REST server with 
+* Start Celery CronTab
 
-`python main`
+`worker --purge -A crontab_tasks -l info -Q request_websites_metrics -c 1 -O fair -n request_websites_metrics`
 
-
-# Run test 
-
-`python -m unittest test/test_available_labs.py`
-
-
-
-# Environment variable for Testing 
-
-same as staging
-
-
-# Environment variable for Celery  on Production
+# Service ENV configuration
 
 | ENV Variable  | VALUE | DESCRIPTION                                                                       |
 |---------------|------|------------------------------------------------------------------------------------|
 | celery_broker_url   | string    | Required. The FQDN or the Redis server to be used as broker |
-| brokers    | string   | Required. The FQDN of the Confluent Kafka Brokers.|
-| schema_registry               | string   | Required. The FQDN of the Confluent Kafka Service Registry.|
-| service_name                    |tc-new-labs-deployment-trigger   | Required. The service name.|
-
-
-
-# Environment variable for Celery on Staging
-
-
-| ENV Variable  | VALUE | DESCRIPTION                                                                       |
-|---------------|------|------------------------------------------------------------------------------------|
-| celery_broker_url   | string    | Required. The FQDN or the Redis server to be used as broker |
-| brokers    | string   | Required. The FQDN of the Confluent Kafka Brokers.|
-| schema_registry               | string   | Required. The FQDN of the Confluent Kafka Service Registry.|
-| service_name                     |tc-new-labs-deployment-trigger  | Required. The service name.|
+| websites_checker_service_url    | string   | Required. The FQDN of the `websites_metrics_collector` service where to send the requests.|
+| request_frequency    | string   | Optional. The default value is `*/2` 2 minutes. It express the frequency of the task. See here https://docs.celeryproject.org/en/stable/userguide/periodic-tasks.html#crontab-schedules|
+| logging_level    | string   | Optional. The level of logging to use fo the built-in `logging` package. The default is `logging.INFO`|

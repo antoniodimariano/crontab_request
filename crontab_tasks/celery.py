@@ -11,9 +11,8 @@ app.config_from_object('crontab_tasks.celeryconfig')
 
 app.conf.beat_schedule = {
 
-
-    "periodically_request_available_labs_report": {
-        "task":'crontab_tasks.tasks.periodically_request_available_labs_report',
-        "schedule": crontab(minute=int(os.environ.get('request_frequency',"*/2")))
+    "periodically_request_websites_metrics": {
+        "task":'crontab_tasks.tasks.periodically_request_websites_metrics',
+        "schedule": crontab(minute=os.environ.get('request_frequency',"*/2"))
     }
 }
